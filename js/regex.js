@@ -1,29 +1,29 @@
-function executa(event) {
+const executa =  event => {
 
 	event.preventDefault();
 
 	limparResultados();
-	var valores 	 = pegaValoresDoForm();
+	let valores 	 = pegaValoresDoForm();
 
-    var resultados 	 = executaRegex(valores);
-    
+    let resultados 	 = executaRegex(valores);
+
     imprimeResultadoNoInput(resultados);
     highlightResultados(resultados, valores.target);
 }
 
 
-function executaRegex(valores) {
+const executaRegex = valores => {
 
-	var textoPattern = valores.pattern; //montaPatternDeDataMaisLegivel();
-	var textoTarget  = valores.target;
-	var mostraIndex  = valores.mostraIndex;
-	var mostraGrupos = valores.mostraGrupos;
+	let textoPattern = valores.pattern; //montaPatternDeDataMaisLegivel();
+	let textoTarget  = valores.target;
+	let mostraIndex  = valores.mostraIndex;
+	let mostraGrupos = valores.mostraGrupos;
 
-	var resultados	 = [];
-    var resultado 	 = null;
+	let resultados	 = [];
+    let resultado 	 = null;
 
 
-	var objetoRegex  = new RegExp(textoPattern, 'g');
+	let objetoRegex  = new RegExp(textoPattern, 'g');
 
 	while (resultado = objetoRegex.exec(textoTarget)) {
 
@@ -43,9 +43,9 @@ function executaRegex(valores) {
 }
 
 
-function geraResultado(resultado, index, lastIndex, mostraIndex) {
+const geraResultado = (resultado, index, lastIndex, mostraIndex) => {
 
-	var textoIndex = mostraIndex ? " [" + index + "-" + lastIndex+ "]" : ""
+	let textoIndex = mostraIndex ? " [" + index + "-" + lastIndex+ "]" : ""
 
 	return {
 		'resultado': resultado + textoIndex,
@@ -55,24 +55,24 @@ function geraResultado(resultado, index, lastIndex, mostraIndex) {
 }
 
 
-function logaTempoDeExecucao(textoPattern, textoTarget) {
-	var pObjetoRegex  = new RegExp(textoPattern, 'g');
-    var ini = performance.now();
+const logaTempoDeExecucao = (textoPattern, textoTarget) => {
+	let pObjetoRegex  = new RegExp(textoPattern, 'g');
+    let ini = performance.now();
     pObjetoRegex.test(textoTarget)
-	var fim =  performance.now();
+	let fim =  performance.now();
 	console.log("Tempo de execução (ms) " + (fim-ini));
 }
 
-function imprimeResultadoNoInput(resultados) {
-	var inputResultado 	= document.querySelector('#resultado');
-	var labelResultado 	= document.querySelector('#labelResultados');
+const imprimeResultadoNoInput = resultados => {
+	let inputResultado 	= document.querySelector('#resultado');
+	let labelResultado 	= document.querySelector('#labelResultados');
 
     labelResultado.innerHTML = (resultados.length) + " Matches (resultados)";
 
-	var resultadosComoArray = resultados.map(function(item){ 
+	let resultadosComoArray = resultados.map(function(item){
 		return item.resultado;
 	});
-	
+
 	labelResultado.innerHTML = (resultadosComoArray.length) + " Matches (resultados)";
 
     if(resultadosComoArray.length > 0) {
@@ -88,10 +88,10 @@ function imprimeResultadoNoInput(resultados) {
 }
 
 
-function highlightResultados(resultados, texto) {	
-	var item = null;
-	var indexBegin = 0;
-	var conteudo = "";
+const highlightResultados = (resultados, texto) => {
+	let item = null;
+	let indexBegin = 0;
+	let conteudo = "";
 
 	while((item = resultados.shift()) != null) {
 		conteudo += semHighlight(escapeHtml(texto.substring(indexBegin, item.index)));
@@ -103,48 +103,41 @@ function highlightResultados(resultados, texto) {
 	if((texto.length - indexBegin) > 0) {
 		conteudo += semHighlight(escapeHtml(texto.substring(indexBegin, texto.length)));
 	}
-	
+
 	document.querySelector("#highlightText").innerHTML = conteudo;
 }
 
-function semHighlight(texto) {
-	return texto;
-	//return "<s>" + texto + "</s>";
-}
+const semHighlight = texto => texto;
 
-function comHighlight(texto) {
-	return "<span class='bg-primary'>" + texto + "</span>";
-}
+const comHighlight = texto => "<span class='bg-primary'>" + texto + "</span>";
 
-function escapeHtml( string ) {
-     return string.replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-}	
+const escapeHtml =  string  => string.replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 
 
-function pegaValoresDoForm() {
+const pegaValoresDoForm = () => {
 
-	var inputTarget 	= document.querySelector('#target');
-	var inputPattern 	= document.querySelector('#pattern')
+	let inputTarget 	= document.querySelector('#target');
+	let inputPattern 	= document.querySelector('#pattern')
 	inputPattern.focus();
 
-	var checkboxIndex 	= document.querySelector('#mostraIndex');
-	var checkboxGroups 	= document.querySelector('#mostraGrupos');
+	let checkboxIndex 	= document.querySelector('#mostraIndex');
+	let checkboxGroups 	= document.querySelector('#mostraGrupos');
 
   	_verifiqueInputs(inputTarget, inputPattern);
 
   	console.log('Target:  ' + inputTarget.value);
   	console.log('Pattern: ' + inputPattern.value.trim());
 
-  	return {'target': inputTarget.value.trim(), 
-  			'pattern': inputPattern.value, 
-  			'mostraIndex': checkboxIndex.checked, 
+  	return {'target': inputTarget.value.trim(),
+  			'pattern': inputPattern.value,
+  			'mostraIndex': checkboxIndex.checked,
   			'mostraGrupos' : checkboxGroups.checked};
 }
 
-function _verifiqueInputs(inputTarget, inputPattern) {
+const _verifiqueInputs = (inputTarget, inputPattern) => {
 	if(!inputTarget.value) {
 		inputTarget.placeholder = 'Digite um target';
 	}
@@ -158,21 +151,18 @@ function _verifiqueInputs(inputTarget, inputPattern) {
 	}
 }
 
-function limparResultados() {
+const limparResultados = () => {
 	console.clear();
 	document.querySelector('#labelResultados').innerHTML = '0 Matches (resultados)';
 	document.querySelector('#resultado').value = '';
 	document.querySelector('#resultado').placeholder = 'sem resultado';
 	document.querySelector("#highlightText").innerHTML = '<em>sem resultado</em>';
-
 }
 
-function montaPatternDeDataMaisLegivel() {
-
-	var DIA  = "[0123]?\\d";
-	var _DE_ = "\\s+(de )?\\s*";
-	var MES  = "[A-Za-z][a-zç]{3,8}";
-	var ANO  = "[12]\\d{3}";
-	return DIA + _DE_ +  MES + _DE_ + ANO;  
-
+const montaPatternDeDataMaisLegivel = () => {
+	let DIA  = "[0123]?\\d";
+	let _DE_ = "\\s+(de )?\\s*";
+	let MES  = "[A-Za-z][a-zç]{3,8}";
+	let ANO  = "[12]\\d{3}";
+	return DIA + _DE_ +  MES + _DE_ + ANO;
 }
